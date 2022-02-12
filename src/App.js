@@ -1,15 +1,8 @@
 import React, { useState, useEffect}  from 'react';
-import BillboardChart from 'react-billboardjs';
-import 'billboard.js/dist/billboard.css';
 import axios from "axios";
 
 function App() {
   const [data, setData] = useState([]);
-
-  const onClick = function() {
-    console.log('onClick')
-    fetchData();
-  }
 
   async function fetchData() {
     const result = await axios('data/cells.json');
@@ -20,13 +13,17 @@ function App() {
     fetchData();
   },[])
 
+  const onClick = function() {
+    fetchData();
+  }
+
   return (
     <div style={{ flex:1,display:'flex',flexDirection:'column',border:'1px solid blue',textAlign:'center',boxSizing:'border-box' }}>  
       <div style={{marginTop:30}}>Each cell has a line graph that has 5 points with values 0-5</div>
       <div style={{marginTop:0}}>if first point is greater than last, color is red</div>
       <div style={{marginTop:0}}>if first point is less than last, color is green</div>
       <div style={{marginTop:0}}>if first point is equal to last, color is gray</div>
-      <div style={{marginTop:0}}>v2022-02-12-a</div>
+      <div style={{marginTop:0}}>v2022-02-12-b</div>
       <div style={{marginTop:10}}>
         <button style={{width:150}} onClick={onClick}>fetch random data</button>
       </div>
