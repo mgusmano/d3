@@ -3,19 +3,66 @@ import axios from "axios";
 
 function App() {
   const [data, setData] = useState([]);
+  const [xwidth, setXwidth] = useState(50);
+  const [xmarginleft, setXmarginLeft] = useState(3);
+  const [xmarginright, setXmarginRight] = useState(3);
+  const [xitems, setXitems] = useState(4);
+  const [yheight, setYheight] = useState(25);
+  const [ymargintop, setYmarginTop] = useState(5);
+  const [ymarginbottom, setYmarginBottom] = useState(3);
+  const [yitems, setYitems] = useState(5);
 
   async function fetchData() {
     const result = await axios('data/cells.json');
     setData(result.data)
   }
 
-  useEffect(() => {
-    fetchData();
-  },[])
+
 
   const onClick = function() {
+
+
     fetchData();
   }
+
+  const onBigger = function() {
+    setXwidth(100);
+    setXmarginLeft(5);
+    setXmarginRight(5);
+    setXitems(4);
+    setYheight(50);
+    setYmarginTop(15);
+    setYmarginBottom(2);
+    setYitems(6);
+
+    fetchData();
+  }
+
+  const onSmaller = function() {
+    setXwidth(50);
+    setXmarginLeft(3);
+    setXmarginRight(3);
+    setXitems(4);
+    setYheight(25);
+    setYmarginTop(0);
+    setYmarginBottom(0);
+    setYitems(5);
+
+    fetchData();
+  }
+
+  useEffect(() => {
+    setXwidth(70);
+    setXmarginLeft(5);
+    setXmarginRight(5);
+    setXitems(4);
+    setYheight(40);
+    setYmarginTop(15);
+    setYmarginBottom(2);
+    setYitems(6);
+
+    fetchData();
+  },[])
 
   return (
     <div style={{ flex:1,display:'flex',flexDirection:'column',border:'1px solid blue',textAlign:'center',boxSizing:'border-box' }}>  
@@ -23,73 +70,97 @@ function App() {
       <div style={{marginTop:0}}>if first point is greater than last, color is red</div>
       <div style={{marginTop:0}}>if first point is less than last, color is green</div>
       <div style={{marginTop:0}}>if first point is equal to last, color is gray</div>
-      <div style={{marginTop:0}}>v2022-02-12-b</div>
+      <div style={{marginTop:0}}>v2022-02-13-a</div>
       <div style={{marginTop:10}}>
         <button style={{width:150}} onClick={onClick}>fetch random data</button>
+        <button style={{width:150}} onClick={onBigger}>bigger</button>
+        <button style={{width:150}} onClick={onSmaller}>smaller</button>
       </div>
       <div className='root' style={{display:'flex',flexDirection:'column',margin:50,alignItems:'center',justifyContent:'center'}}>
         {data.map((row,i)=> {
           var cols = row.map((col,i2)=>{
-            var xwidth = 50
-            var xmargin = 3
-            var xitems = 5
-            var scalewidth = xwidth - xmargin - xmargin
-            var itemwidth = scalewidth/(xitems-1)
-            var widthArray = [
-              xwidth - (itemwidth * 4),
-              xwidth - (itemwidth * 3),
-              xwidth - (itemwidth * 2),
-              xwidth - (itemwidth * 1),
-              xwidth - (itemwidth * 0) - xmargin
-            ]
 
-            var height = 30
-            var ymargin = 3
-            var yitems = 6
-            var scaleheight = height - ymargin - ymargin
+            var scalewidth = xwidth - xmarginleft - xmarginright
+            var itemwidth = scalewidth/(xitems-1)
+            var widthArray = []
+            // console.log(xwidth)
+            // console.log(itemwidth)
+            // console.log(xitems)
+            // console.log(xmarginleft)
+            // console.log(xmarginright)
+            //widthArray.push(xwidth - (itemwidth * xitems-1) - xmargin)
+
+            widthArray.push(xmarginleft)
+            
+            for (var x=xitems-2;x>0;x--) {
+              widthArray.push(xwidth - (itemwidth * x))
+            }
+            widthArray.push(xwidth - (itemwidth * 0) - xmarginright)
+            //console.log(widthArray)
+
+            // setXwidth(70);
+            // setXmarginLeft(3);
+            // setXmarginRight(3);
+            // setXitems(4);
+            // setYheight(50);
+            // setYmarginTop(10);
+            // setYmarginBottom(0);
+            // setYitems(6);
+
+            var scaleheight = yheight - ymargintop - ymarginbottom
             var itemheight = scaleheight/(yitems-1)
-            var heightArray = [
-              height - (itemheight * 0) - ymargin,
-              height - (itemheight * 1),
-              height - (itemheight * 2),
-              height - (itemheight * 3),
-              height - (itemheight * 4),
-              height - (itemheight * 5)     
-            ]
+            var heightArray = []
+            //console.log(yheight)
+            //console.log(ymargintop)
+            heightArray.push(yheight-ymarginbottom)
+            for (var y=1;y<yitems-1;y++) {
+              heightArray.push(yheight - (itemheight * y))
+            }
+            heightArray.push(ymargintop)
+            console.log('***')
+            console.log(heightArray)
 
             function getRandomInt(min, max) {
               min = Math.ceil(min);
               max = Math.floor(max);
               return Math.floor(Math.random() * (max - min + 1)) + min;
             }
-            var max = 5
+            var max = yitems - 1
             var min = 0
-            col = [
-              getRandomInt(min,max),
-              getRandomInt(min,max),
-              getRandomInt(min,max),
-              getRandomInt(min,max),
-              getRandomInt(min,max)
-            ]
+
+            col = []
+            for (var x3=0;x3<xitems;x3++) { 
+              col.push(getRandomInt(min,max))
+            }
+
+            var points = ''
+            var t = []
+            var t2 = []
+            for (var x2=0;x2<xitems;x2++) {
+             points = points + ` ${widthArray[x2]},${heightArray[col[x2]]}` 
+             console.log(col[x2],heightArray[col[x2]])
+             t.push(<text key={x2} x={(widthArray[x2])-3} y={(heightArray[col[x2]])-5} style={{fill:'white',fontSize:'10px'}}>{col[x2]}</text>)
+             t2.push(<rect key={x2} stroke={'white'} x={widthArray[x2]-3} y={heightArray[col[x2]]-3} width="5" height="5" style={{fill:'black',strokeWidth:'1',fillOpacity:'1.0',strokeOpacity:1.0}}></rect>)
+            }
+            //t = t + </div>
+            console.log(col)
+            console.log(points)
+            //console.log(t)
 
             var backgroundcolor = 'gray'
-            if (col[0] < col[4]) {
+            if (col[0] < col[xitems-1]) {
               backgroundcolor = 'green'
             }
-            if (col[0] > col[4]) {
+            if (col[0] > col[xitems-1]) {
               backgroundcolor = 'red'
             }
-            var points = `
-            ${widthArray[0]},${heightArray[col[0]]}
-            ${widthArray[1]},${heightArray[col[1]]}
-            ${widthArray[2]},${heightArray[col[2]]}
-            ${widthArray[3]},${heightArray[col[3]]}
-            ${widthArray[4]},${heightArray[col[4]]}
-            `
-            return <svg key={i2} width="50" height="30">
+
+            return <svg key={i2} width={xwidth} height={yheight}>
               <g transform="translate(0,0)">
-                <rect stroke={'white'} x={0} y={0} width={50} height={30} style={{fill:backgroundcolor,strokeWidth:'1',fillOpacity:'1.0',strokeOpacity:1.0}}></rect>
+                <rect stroke={'white'} x={0} y={0} width={xwidth} height={yheight} style={{fill:backgroundcolor,strokeWidth:'1',fillOpacity:'1.0',strokeOpacity:1.0}}></rect>
                 <polyline points={points} fill="none" stroke="white" strokeWidth="2"/>
+                {xwidth > 50 && t}
+                {xwidth > 50 && t2}
               </g>
             </svg>
           })
