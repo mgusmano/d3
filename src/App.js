@@ -13,9 +13,9 @@ function App() {
   const [ymargintop, setYmarginTop] = useState(5);
   const [ymarginbottom, setYmarginBottom] = useState(3);
   const [yitems, setYitems] = useState(5);
-  const [redcolor, setRedColor] = useState("#AD4040");
-  const [greencolor, setGreenColor] = useState("#5E8040");
-  const [nochangecolor, setNoChangeColor] = useState("gray");
+  const [redcolor, setRedColor] = useState("#9F0500");
+  const [greencolor, setGreenColor] = useState("#194D33");
+  const [nochangecolor, setNoChangeColor] = useState("#666666");
 
   async function fetchData() {
     const result = await axios('data/cells.json');
@@ -93,7 +93,7 @@ function App() {
       <div style={{marginTop:0}}>if first point is greater than last, color is red</div>
       <div style={{marginTop:0}}>if first point is less than last, color is green</div>
       <div style={{marginTop:0}}>if first point is equal to last, color is gray</div>
-      <div style={{marginTop:0}}>v2022-02-13-b</div>
+      <div style={{marginTop:0}}>v2022-02-13-c</div>
       <div style={{marginTop:10}}>
         <button style={{width:150}} onClick={onClick}>fetch random data</button>
         <button style={{width:150}} onClick={onBigger}>bigger</button>
