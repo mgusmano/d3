@@ -1,5 +1,7 @@
 import React, { useState, useEffect}  from 'react';
 import axios from "axios";
+import { SketchPicker, CompactPicker } from 'react-color'
+import { SketchPresetColors } from 'react-color/lib/components/sketch/SketchPresetColors';
 
 function App() {
   const [data, setData] = useState([]);
@@ -11,6 +13,9 @@ function App() {
   const [ymargintop, setYmarginTop] = useState(5);
   const [ymarginbottom, setYmarginBottom] = useState(3);
   const [yitems, setYitems] = useState(5);
+  const [redcolor, setRedColor] = useState("#AD4040");
+  const [greencolor, setGreenColor] = useState("#5E8040");
+  const [nochangecolor, setNoChangeColor] = useState("gray");
 
   async function fetchData() {
     const result = await axios('data/cells.json');
@@ -64,17 +69,40 @@ function App() {
     fetchData();
   },[])
 
+  const onRedColorChange = function(color, event) {
+    if (color !== null) {
+      setRedColor(color.hex)
+    }
+  }
+
+  const onGreenColorChange = function(color, event) {
+    if (color !== null) {
+      setGreenColor(color.hex)
+    }
+  }
+
+  const onNoChangeColorChange = function(color, event) {
+    if (color !== null) {
+      setNoChangeColor(color.hex)
+    }
+  }
+
   return (
     <div style={{ flex:1,display:'flex',flexDirection:'column',border:'1px solid blue',textAlign:'center',boxSizing:'border-box' }}>  
       <div style={{marginTop:30}}>Each cell has a line graph that has 5 points with values 0-5</div>
       <div style={{marginTop:0}}>if first point is greater than last, color is red</div>
       <div style={{marginTop:0}}>if first point is less than last, color is green</div>
       <div style={{marginTop:0}}>if first point is equal to last, color is gray</div>
-      <div style={{marginTop:0}}>v2022-02-13-a</div>
+      <div style={{marginTop:0}}>v2022-02-13-b</div>
       <div style={{marginTop:10}}>
         <button style={{width:150}} onClick={onClick}>fetch random data</button>
         <button style={{width:150}} onClick={onBigger}>bigger</button>
         <button style={{width:150}} onClick={onSmaller}>smaller</button>
+      </div>
+      <div style={{margin:'20px 0 0 0',display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
+        <div style={{display:'flex',flexDirection:'column',margin:'0 0 0 30px'}}><div>Red:</div><CompactPicker color={redcolor} onChange={onRedColorChange}/></div>
+        <div style={{display:'flex',flexDirection:'column',margin:'0 0 0 30px'}}><div>Green:</div><CompactPicker color={greencolor} onChange={onGreenColorChange}/></div>
+        <div style={{display:'flex',flexDirection:'column',margin:'0 0 0 30px'}}><div>No Change:</div><CompactPicker color={nochangecolor} onChange={onNoChangeColorChange}/></div>
       </div>
       <div className='root' style={{display:'flex',flexDirection:'column',margin:50,alignItems:'center',justifyContent:'center'}}>
         {data.map((row,i)=> {
@@ -147,12 +175,12 @@ function App() {
             console.log(points)
             //console.log(t)
 
-            var backgroundcolor = 'gray'
+            var backgroundcolor = nochangecolor //'gray'
             if (col[0] < col[xitems-1]) {
-              backgroundcolor = 'green'
+              backgroundcolor = greencolor //'#097969' //'green'
             }
             if (col[0] > col[xitems-1]) {
-              backgroundcolor = 'red'
+              backgroundcolor = redcolor //'red'
             }
 
             return <svg key={i2} width={xwidth} height={yheight}>
