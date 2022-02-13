@@ -15,7 +15,7 @@ function App() {
   const [yitems, setYitems] = useState(5);
   const [redcolor, setRedColor] = useState("#9F0500");
   const [greencolor, setGreenColor] = useState("#194D33");
-  const [nochangecolor, setNoChangeColor] = useState("#666666");
+  const [graycolor, setGrayColor] = useState("#666666");
 
   async function fetchData() {
     const result = await axios('data/cells.json');
@@ -83,7 +83,7 @@ function App() {
 
   const onNoChangeColorChange = function(color, event) {
     if (color !== null) {
-      setNoChangeColor(color.hex)
+      setGrayColor(color.hex)
     }
   }
 
@@ -102,7 +102,7 @@ function App() {
       <div style={{margin:'20px 0 0 0',display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
         <div style={{display:'flex',flexDirection:'column',margin:'0 0 0 30px'}}><div>Red:</div><CompactPicker color={redcolor} onChange={onRedColorChange}/></div>
         <div style={{display:'flex',flexDirection:'column',margin:'0 0 0 30px'}}><div>Green:</div><CompactPicker color={greencolor} onChange={onGreenColorChange}/></div>
-        <div style={{display:'flex',flexDirection:'column',margin:'0 0 0 30px'}}><div>No Change:</div><CompactPicker color={nochangecolor} onChange={onNoChangeColorChange}/></div>
+        <div style={{display:'flex',flexDirection:'column',margin:'0 0 0 30px'}}><div>Gray:</div><CompactPicker color={graycolor} onChange={onNoChangeColorChange}/></div>
       </div>
       <div className='root' style={{display:'flex',flexDirection:'column',margin:50,alignItems:'center',justifyContent:'center'}}>
         {data.map((row,i)=> {
@@ -175,7 +175,7 @@ function App() {
             console.log(points)
             //console.log(t)
 
-            var backgroundcolor = nochangecolor //'gray'
+            var backgroundcolor = graycolor //'gray'
             if (col[0] < col[xitems-1]) {
               backgroundcolor = greencolor //'#097969' //'green'
             }
